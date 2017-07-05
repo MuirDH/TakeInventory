@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="thin_layout_margin">4dp</dimen>
+    <dimen name="common_layout_margin">8dp</dimen>
+    <dimen name="listitem_divider_height">1dp</dimen>
+    <dimen name="common_padding">16dp</dimen>
+    <dimen name="extreme_expand_list_left">66dp</dimen>
+    <dimen name="padding_start_50">50dp</dimen>
+    <dimen name="end_0">0dp</dimen>
+    <dimen name="margin_start_55">55dp</dimen>
+    <dimen name="padding_start_64">64dp</dimen>
+    <dimen name="margin_start_82">82dp</dimen>
+    <dimen name="padding_start_70">70dp</dimen>
+    <dimen name="margin_start_94">94dp</dimen>
+
+</resources>

@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Take Inventory</string>
+    <string name="clip_art_image_of_a_store">clip art image of a store</string>
+    <string name="the_shelves_are_empty">The shelves are empty...</string>
+    <string name="add_inventory_by_clicking_the_add_item_button">Add inventory by clicking the Add Item button</string>
+    <string name="item_name">Item Name</string>
+    <string name="quantity">Quantity</string>
+    <string name="price">Price</string>
+    <string name="dollar_sign_in_a_circle">dollar sign in a circle</string>
+    <string name="image_of_item">image of item</string>
+    <string name="change_quantity">Change Quantity</string>
+    <string name="plus_1">plus 1</string>
+    <string name="minus_one">minus one</string>
+    <string name="place_order">Place Order</string>
+    <string name="shopping_cart">shopping cart</string>
+    <string name="delete_item">Delete Item</string>
+    <string name="bin">bin</string>
+    <string name="edit_item">Edit Item</string>
+    <string name="pen">pen</string>
+    <string name="cost_per_item_whole_number_only">Cost Per Item. Whole num.</string>
+    <string name="add_a_photo">Add a photo</string>
+    <string name="camera_icon">camera icon</string>
+    <string name="overview">Overview</string>
+    <string name="delete_full_inventory">Delete Full Inventory</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+</resources>

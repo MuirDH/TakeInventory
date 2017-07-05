@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- further details for each inventory item. This includes an item image,
+Quantity add/remove buttons, an Order button, a Delete button, and an edit button. -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/common_layout_margin"
+        android:contentDescription="@string/image_of_item"
+        android:src="@mipmap/ic_launcher" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/change_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DetailText"
+            android:paddingStart="@dimen/padding_start_50"
+            android:text="@string/change_quantity" />
+
+        <ImageButton
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/change_quantity"
+            android:layout_marginStart="@dimen/margin_start_55"
+            android:backgroundTint="@color/colorIcon"
+            android:contentDescription="@string/plus_1"
+            android:src="@drawable/add" />
+
+        <ImageButton
+            android:id="@+id/minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/change_quantity"
+            android:layout_toEndOf="@+id/add"
+            android:backgroundTint="@color/colorIcon"
+            android:contentDescription="@string/minus_one"
+            android:src="@drawable/minus" />
+
+        <TextView
+            android:id="@+id/order_inventory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DetailText"
+            android:layout_toEndOf="@+id/change_quantity"
+            android:paddingStart="?android:attr/expandableListPreferredChildPaddingLeft"
+            android:text="@string/place_order" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/order_inventory"
+            android:layout_marginStart="@dimen/extreme_expand_list_left"
+            android:layout_toEndOf="@+id/minus"
+            android:backgroundTint="@color/colorIcon"
+            android:contentDescription="@string/shopping_cart"
+            android:src="@drawable/order" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/delete_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DetailText"
+            android:paddingStart="@dimen/padding_start_64"
+            android:text="@string/delete_item" />
+
+        <ImageButton
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/delete_text"
+            android:layout_marginStart="@dimen/margin_start_82"
+            android:backgroundTint="@color/colorIcon"
+            android:contentDescription="@string/bin"
+            android:src="@drawable/delete" />
+
+        <TextView
+            android:id="@+id/edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DetailText"
+            android:layout_toEndOf="@+id/delete_text"
+            android:paddingStart="@dimen/padding_start_70"
+            android:text="@string/edit_item" />
+
+        <ImageButton
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_text"
+            android:layout_marginStart="@dimen/margin_start_94"
+            android:layout_toEndOf="@+id/delete"
+            android:backgroundTint="@color/colorIcon"
+            android:contentDescription="@string/pen"
+            android:src="@drawable/edit" />
+
+    </RelativeLayout>
+
+</LinearLayout>
