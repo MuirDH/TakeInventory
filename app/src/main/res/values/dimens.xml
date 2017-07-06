@@ -13,5 +13,6 @@
     <dimen name="margin_start_82">82dp</dimen>
     <dimen name="padding_start_70">70dp</dimen>
     <dimen name="margin_start_94">94dp</dimen>
+    <dimen name="image_height">250dp</dimen>
 
 </resources>

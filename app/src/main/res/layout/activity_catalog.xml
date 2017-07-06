@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.takeinventory.CatalogActivity">
 
-    <ExpandableListView
+    <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -63,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/common_padding"
         android:src="@drawable/create_new"
         app:backgroundTint="@color/colorIcon" />

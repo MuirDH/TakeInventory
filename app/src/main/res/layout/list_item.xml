@@ -12,7 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/item_name"
-        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+        android:paddingStart="@dimen/common_padding"
+        android:paddingEnd="@dimen/end_0"
         style="@style/ListItem" />
 
     <TextView
