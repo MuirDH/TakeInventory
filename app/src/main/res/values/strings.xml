@@ -17,11 +17,14 @@
     <string name="bin">bin</string>
     <string name="edit_item">Edit Item</string>
     <string name="pen">pen</string>
-    <string name="cost_per_item_whole_number_only">Cost Per Item. Whole num.</string>
+    <string name="item_price">Item Price (Int)</string>
     <string name="add_a_photo">Add a photo</string>
     <string name="camera_icon">camera icon</string>
     <string name="overview">Overview</string>
     <string name="delete_full_inventory">Delete Full Inventory</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+    <string name="insert_dummy_data">Insert Dummy Data</string>
+    <string name="current_quantity">Current Quantity</string>
+    <string name="zero">0</string>
 </resources>
