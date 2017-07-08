@@ -25,7 +25,7 @@ public class InventoryProvider extends ContentProvider {
     public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
 
     // URI matcher code for the content URI for the inventory table
-    private static final int INVENTORY = 100;
+    private static final int ITEMS = 100;
 
     // URI matcher code for the content URI for a single item in the inventory table
     private static final int ITEM_ID = 101;
@@ -45,10 +45,10 @@ public class InventoryProvider extends ContentProvider {
          * when a match is found.
          *
          * The content URI of the form "content://com.example.android.takeinventory/inventory will
-         * map to the integer code {@link #INVENTORY}. This URI is used to provide access to
+         * map to the integer code {@link #ITEMS}. This URI is used to provide access to
          * MUULTIPLE rows of the inventory table
          */
-        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_INVENTORY, INVENTORY);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_INVENTORY, ITEMS);
 
         /*
          * The content URI of the form "content://com.example.android.takeinventory/inventory/#"
@@ -72,10 +72,10 @@ public class InventoryProvider extends ContentProvider {
         return true;
     }
 
-    @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
-                        @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection,
+                        String[] selectionArgs, String sortOrder) {
+
         // Get readable database
         SQLiteDatabase database = dbHelper.getReadableDatabase();
 
@@ -86,9 +86,9 @@ public class InventoryProvider extends ContentProvider {
         int match = uriMatcher.match(uri);
 
         switch (match) {
-            case INVENTORY:
+            case ITEMS:
                 /*
-                 * For the INVENTORY code, query the inventory table directly with the given
+                 * For the ITEMS code, query the inventory table directly with the given
                  * projection, selection, selection arguments, and sort order. The cursor could
                  * contain multiple rows of the inventory table.
                  */
@@ -132,26 +132,13 @@ public class InventoryProvider extends ContentProvider {
         return cursor;
     }
 
-    @Nullable
-    @Override
-    public String getType(@NonNull Uri uri) {
-        final int match = uriMatcher.match(uri);
-        switch (match) {
-            case INVENTORY:
-                return ItemEntry.CONTENT_LIST_TYPE;
-            case ITEM_ID:
-                return ItemEntry.CONTENT_ITEM_TYPE;
-            default:
-                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
-        }
-    }
 
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         final int match = uriMatcher.match(uri);
         switch (match) {
-            case INVENTORY:
+            case ITEMS:
                 return insertItem(uri, contentValues);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -199,47 +186,11 @@ public class InventoryProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection,
-                      @Nullable String[] selectionArgs) {
-        // get writable database
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-
-        // track the number of rows that were deleted
-        int rowsDeleted;
-
+    public int update(@NonNull Uri uri, ContentValues contentValues,
+                       String selection, String[] selectionArgs) {
         final int match = uriMatcher.match(uri);
         switch (match) {
-            case INVENTORY:
-                // delete all rows that match the selection and selection args
-                rowsDeleted = database.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            case ITEM_ID:
-                // Delete a single row given by the ID in the URI
-                selection = ItemEntry._ID + "=?";
-                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                rowsDeleted = database.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            default:
-                throw new IllegalArgumentException("Deletion is not supported for " + uri);
-        }
-
-        /*
-         * If 1 or more rows were deleted, then notify all listeners that the data at the given URI
-         * was changed
-         */
-        if (rowsDeleted !=0)
-            getContext().getContentResolver().notifyChange(uri, null);
-
-        // return the number of rows deleted
-        return rowsDeleted;
-    }
-
-    @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues,
-                      @Nullable String selection, @Nullable String[] selectionArgs) {
-        final int match = uriMatcher.match(uri);
-        switch (match) {
-            case INVENTORY:
+            case ITEMS:
                 return updateItem(uri, contentValues, selection, selectionArgs);
             case ITEM_ID:
                 /*
@@ -256,10 +207,10 @@ public class InventoryProvider extends ContentProvider {
     }
 
     /*
-     * Update the inventory items in the database with the given content values. Apply the changes
-     * to the rows specified in the selection and selection arguments (which could be 0 or 1 or more
-     * items). Reture the number of rows that were successfully updated
-     */
+    * Update the inventory items in the database with the given content values. Apply the changes
+    * to the rows specified in the selection and selection arguments (which could be 0 or 1 or more
+    * items). Return the number of rows that were successfully updated
+    */
     private int updateItem(Uri uri, ContentValues values, String selection,
                            String[] selectionArgs) {
         /*
@@ -312,5 +263,53 @@ public class InventoryProvider extends ContentProvider {
         //Return the number of rows updated
         return rowsUpdated;
 
+    }
+
+    @Override
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+        // get writable database
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+
+        // track the number of rows that were deleted
+        int rowsDeleted;
+
+        final int match = uriMatcher.match(uri);
+        switch (match) {
+            case ITEMS:
+                // delete all rows that match the selection and selection args
+                rowsDeleted = database.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case ITEM_ID:
+                // Delete a single row given by the ID in the URI
+                selection = ItemEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
+
+        /*
+         * If 1 or more rows were deleted, then notify all listeners that the data at the given URI
+         * was changed
+         */
+        if (rowsDeleted !=0)
+            getContext().getContentResolver().notifyChange(uri, null);
+
+        // return the number of rows deleted
+        return rowsDeleted;
+    }
+
+    @Override
+    public String getType(@NonNull Uri uri) {
+        final int match = uriMatcher.match(uri);
+        switch (match) {
+            case ITEMS:
+                return ItemEntry.CONTENT_LIST_TYPE;
+            case ITEM_ID:
+                return ItemEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
+        }
     }
 }

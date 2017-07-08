@@ -84,6 +84,9 @@ public class CatalogActivity extends AppCompatActivity implements
             }
         });
 
+        // Kick off the loader
+        getSupportLoaderManager().initLoader(ITEM_LOADER, null, this);
+
     }
 
     /**
