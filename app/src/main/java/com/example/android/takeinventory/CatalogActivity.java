@@ -84,9 +84,6 @@ public class CatalogActivity extends AppCompatActivity implements
             }
         });
 
-        // Kick off the loader
-        getSupportLoaderManager().initLoader(ITEM_LOADER, null, this);
-
     }
 
     /**
@@ -99,8 +96,8 @@ public class CatalogActivity extends AppCompatActivity implements
          */
         ContentValues values = new ContentValues();
         values.put(ItemEntry.COLUMN_ITEM_NAME, "Example Item");
-        values.put(ItemEntry.COLUMN_ITEM_QUANTITY, "42");
-        values.put(ItemEntry.COLUMN_ITEM_PRICE, "7");
+        values.put(ItemEntry.COLUMN_ITEM_QUANTITY, 42);
+        values.put(ItemEntry.COLUMN_ITEM_PRICE, 7);
 
         /*
          * Insert a new row for the item into the provider using the ContentResolver.

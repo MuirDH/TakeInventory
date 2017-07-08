@@ -72,6 +72,7 @@ public class EditorActivity extends AppCompatActivity implements
     private ImageButton orderItem;
     private ImageButton addImageButton;
 
+
     /**
      * Boolean flag that keeps track of whether the item has been edited (true) or not (false)
      */
@@ -106,6 +107,8 @@ public class EditorActivity extends AppCompatActivity implements
         minusButton = (ImageButton) findViewById(R.id.minus);
         addImageButton = (ImageButton) findViewById(R.id.add_photo);
         orderItem = (ImageButton) findViewById(R.id.cart);
+        itemQuantityText = (TextView) findViewById(R.id.quantity);
+        itemImage = (ImageView) findViewById(R.id.item_image);
 
         /*
          * Setup OnTouchListeners on all the input fields, so we can determine if the user has
