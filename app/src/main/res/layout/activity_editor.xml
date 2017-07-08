@@ -61,7 +61,8 @@ Quantity add/remove buttons, an Order button, a Delete button, and an edit butto
                 android:layout_marginStart="@dimen/margin_start_55"
                 android:backgroundTint="@color/colorIcon"
                 android:contentDescription="@string/plus_1"
-                android:src="@drawable/add" />
+                android:src="@drawable/add"
+                android:onClick="increaseQuantity"/>
 
             <ImageButton
                 android:id="@+id/minus"
@@ -71,7 +72,8 @@ Quantity add/remove buttons, an Order button, a Delete button, and an edit butto
                 android:layout_toEndOf="@+id/add"
                 android:backgroundTint="@color/colorIcon"
                 android:contentDescription="@string/minus_one"
-                android:src="@drawable/minus" />
+                android:src="@drawable/minus"
+                android:onClick="decreaseQuantity"/>
 
             <!-- Quantity in Stock Fields -->
             <TextView
@@ -118,7 +120,8 @@ Quantity add/remove buttons, an Order button, a Delete button, and an edit butto
                 android:layout_marginStart="@dimen/margin_start_82"
                 android:backgroundTint="@color/colorIcon"
                 android:contentDescription="@string/shopping_cart"
-                android:src="@drawable/order" />
+                android:src="@drawable/order"
+                android:onClick="composeEmail"/>
 
             <!-- Add Photo Field -->
             <!-- Label -->
@@ -141,7 +144,8 @@ Quantity add/remove buttons, an Order button, a Delete button, and an edit butto
                 android:layout_below="@+id/add_photo_text"
                 android:backgroundTint="@color/colorIcon"
                 android:contentDescription="@string/camera_icon"
-                android:src="@mipmap/add_photo" />
+                android:src="@mipmap/add_photo"
+                android:onClick="addNewImage"/>
 
         </RelativeLayout>
 

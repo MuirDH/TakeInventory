@@ -27,4 +27,17 @@
     <string name="insert_dummy_data">Insert Dummy Data</string>
     <string name="current_quantity">Current Quantity</string>
     <string name="zero">0</string>
+    <string name="editor_delete_item_failed">Error with deleting item</string>
+    <string name="rows_deleted">rows deleted from inventory database</string>
+    <string name="editor_activity_title_new_item">Add an Item</string>
+    <string name="editor_activity_title_edit_item">Edit Item</string>
+    <string name="cannot_have_negative_quanity">Cannot have negative quantity amounts</string>
+    <string name="editor_insert_failed">Error with saving item</string>
+    <string name="editor_insert_successful">Item saved.</string>
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
+    <string name="delete_dialog_msg">Delete this item?</string>
+    <string name="cancel">Cancel</string>
+    <string name="editor_delete_item_successful">Item deleted.</string>
 </resources>

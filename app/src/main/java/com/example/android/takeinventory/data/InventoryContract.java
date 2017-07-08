@@ -34,7 +34,7 @@ public class InventoryContract {
 
     /**
      * Possible path (appended to base content URI for possible URI's).
-     * For instance, content://com.example.android.takeinventory/inventory/ is a valid path for
+     * For instance, content://com.example.android.takeinventory/items/ is a valid path for
      * looking at item data. content://com.example.android.takeinventory/staff/ will fail, as the
      * ContentProvider hasn't been given any information on what to do with "staff".
      */

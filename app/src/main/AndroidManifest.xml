@@ -27,11 +27,11 @@
             android:value=".CatalogActivity"/>
         </activity>
 
-       <!-- <provider
+        <provider
             android:authorities="com.example.android.takeinventory"
             android:name=".data.InventoryProvider"
             android:exported="false"
-            android:grantUriPermissions="true"/>-->
+            android:grantUriPermissions="true"/>
     </application>
 
 </manifest>
