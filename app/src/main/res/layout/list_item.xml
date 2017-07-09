@@ -34,9 +34,10 @@
         android:id="@+id/sale_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/item_sold"
+        android:backgroundTint="@color/colorIcon"
         android:contentDescription="@string/dollar_sign_in_a_circle"
-        android:backgroundTint="@color/colorIcon"/>
+        android:onClick="onSalePress"
+        android:src="@drawable/item_sold" />
 
 
 </LinearLayout>

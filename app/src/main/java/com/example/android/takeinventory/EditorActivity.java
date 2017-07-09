@@ -2,8 +2,6 @@ package com.example.android.takeinventory;
 
 import android.app.Activity;
 import android.app.LoaderManager;
-import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
@@ -20,7 +18,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -31,12 +28,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.takeinventory.data.Database;
+import com.example.android.takeinventory.data.Item;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import static com.example.android.takeinventory.data.InventoryContract.ItemEntry;
 
 /**
  * TakeInventory Created by Muir on 05/07/2017.
@@ -59,18 +57,15 @@ public class EditorActivity extends AppCompatActivity implements
     private Bitmap bitmap;
     private Uri uri;
     private boolean galleryImage = false;
-    private String currentImageUri = "no image";
     private String uriString;
 
     private EditText nameEditText;
     private EditText priceEditText;
 
-    private ImageButton plusButton;
-    private ImageButton minusButton;
     private TextView itemQuantityText;
 
-    private ImageButton orderItem;
-    private ImageButton addImageButton;
+    private Database database = new Database();
+
 
 
     /**
@@ -100,13 +95,12 @@ public class EditorActivity extends AppCompatActivity implements
         //creating a new item or editing an existing one.
         isNewItem();
 
-        // Find all relevant views that we will need to read user input from
+        // Find all relevant views that we will need to readfrom
         nameEditText = (EditText) findViewById(R.id.edit_item_name);
         priceEditText = (EditText) findViewById(R.id.edit_item_price);
-        plusButton = (ImageButton) findViewById(R.id.add);
-        minusButton = (ImageButton) findViewById(R.id.minus);
-        addImageButton = (ImageButton) findViewById(R.id.add_photo);
-        orderItem = (ImageButton) findViewById(R.id.cart);
+        ImageButton plusButton = (ImageButton) findViewById(R.id.add);
+        ImageButton minusButton = (ImageButton) findViewById(R.id.minus);
+        ImageButton addImageButton = (ImageButton) findViewById(R.id.add_photo);
         itemQuantityText = (TextView) findViewById(R.id.quantity);
         itemImage = (ImageView) findViewById(R.id.item_image);
 
@@ -175,6 +169,11 @@ public class EditorActivity extends AppCompatActivity implements
         itemQuantityText.setText(finalQuantity);
         }
 
+
+    public void onSalePress(View view){
+        Toast.makeText(this, "Sale button pressed", Toast.LENGTH_SHORT).show();
+    }
+
     public void decreaseQuantity (View view){
             // parse the string in the db to an int, subtract one then convert back to a String
             String quantity = itemQuantityText.getText().toString().trim();
@@ -205,7 +204,7 @@ public class EditorActivity extends AppCompatActivity implements
         if (resultCodes == Activity.RESULT_OK) {
             if (resultData != null) {
                 uri = resultData.getData();
-                currentImageUri = resultData.getData().toString();
+                String currentImageUri = resultData.getData().toString();
                 bitmap = getBitmapFromCurrentItemURI(uri);
                 itemImage.setImageBitmap(bitmap);
                 uriString = getShareableImageUri().toString();
@@ -300,6 +299,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     private void saveItem() {
 
+
         /*
          * Read from fields. Use trim to eliminate leading or trailing white space
          */
@@ -308,49 +308,15 @@ public class EditorActivity extends AppCompatActivity implements
         String quantityString = itemQuantityText.getText().toString().trim();
         String imageString = uriString;
 
-        if (blankFields(nameString, priceString, quantityString, imageString)) return;
+        Item newItem = new Item(nameString, priceString, quantityString, imageString);
 
-        /*
-         * Create a ContentValues object where column names are the keys, and item attributes from
-         * the editor are the values
-         */
-        ContentValues values = new ContentValues();
-        values.put(ItemEntry.COLUMN_ITEM_NAME, nameString);
-        values.put(ItemEntry.COLUMN_ITEM_PRICE, priceString);
-        values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantityString);
-        values.put(ItemEntry.COLUMN_ITEM_IMAGE, imageString);
-
-        /*
-         * If the quantity is not provided by the user, don't try to parse the string into an
-         * integer value. Use 0 by default.
-         */
-        int quantity = 0;
-        if (!TextUtils.isEmpty(quantityString)) {
-            quantity = Integer.parseInt(quantityString);
-        }
-        values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity);
-
-        /*
-         * If the price is not provided by the user, don't try to parse the string into an
-         * integer value. Use 0 by default.
-         */
-        int price = 0;
-        if (!TextUtils.isEmpty(priceString)) {
-            price = Integer.parseInt(priceString);
-        }
-        values.put(ItemEntry.COLUMN_ITEM_PRICE, price);
-
-        // Determine if this is a new or existing item by checking if currentItemUri is null or not
-        newOrExistingItem(values);
-    }
-
-    private void newOrExistingItem(ContentValues values) {
         if (currentItemUri == null) {
             // Insert a new item into the provider, returning the content URI for the new item
-            Uri newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
+
+            Uri uri = database.addItem(getContentResolver(), newItem);
 
             // Show a toast message depending on whether or not the insertion was successful
-            if (newUri == null) {
+            if (uri == null) {
                 // If the new content URI is null, then there was an error with insertion
                 Toast.makeText(this, getString(R.string.editor_insert_failed),
                         Toast.LENGTH_SHORT).show();
@@ -366,7 +332,7 @@ public class EditorActivity extends AppCompatActivity implements
              * selection args because currentItemUri will already identify the correct row in the
              * database that we want to modify.
              */
-            int rowsAffected = getContentResolver().update(currentItemUri, values, null, null);
+            int rowsAffected = database.updateItem(getContentResolver(), newItem, currentItemUri);
 
             // Show a toast message depending on whether or not the update was successful
             if (rowsAffected == 0) {
@@ -380,19 +346,6 @@ public class EditorActivity extends AppCompatActivity implements
             }
         }
     }
-
-    private boolean blankFields(String nameString, String priceString, String quantityString,
-                                String imageString) {
-        /*
-         * check if this is supposed to be a new item and check if all the fields in the editor are
-         * blank
-         */
-        return currentItemUri == null && TextUtils.isEmpty(nameString)
-                && TextUtils.isEmpty(priceString)
-                && TextUtils.isEmpty(quantityString)
-                && TextUtils.isEmpty(imageString);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -420,68 +373,44 @@ public class EditorActivity extends AppCompatActivity implements
          * since the editor show all item attributes, define a projection that contains all columns
          * from the inventory table
          */
-        String [] projection = {
-                ItemEntry._ID,
-                ItemEntry.COLUMN_ITEM_NAME,
-                ItemEntry.COLUMN_ITEM_PRICE,
-                ItemEntry.COLUMN_ITEM_QUANTITY,
-                ItemEntry.COLUMN_ITEM_IMAGE};
 
-        // This loader will execute the ContentProvider's query method on a background thread
-        return new CursorLoader(
-                this,           // Parent activity context
-                currentItemUri, // Query the content URI for the current item
-                projection,     // Columns to include in the resulting Cursor
-                null,           // No selection clause
-                null,           // No selection arguments
-                null);          // Default sort order
+        return database.getLoader(id,args,this,currentItemUri);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        // Bail early if the cursor is null or there is less than 1 row in the cursor
-        if (cursor == null || cursor.getCount() < 1)
-            return;
 
         /*
          * Proceed with moving to the first row of the cursor and reading data from it. (This should
          * be the only row in the cursor)
          */
-        if (cursor.moveToFirst()) {
-            // find the columns of item attributes that we're interested in
-            int nameColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_NAME);
-            int priceColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_QUANTITY);
-            int imageColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_IMAGE);
+        Item item = database.getItem(cursor);
+        setItem(item);
+    }
 
-            // Extract out the value from the Cursor for the given column index
-            String name = cursor.getString(nameColumnIndex);
-            int quantity = cursor.getInt(quantityColumnIndex);
-            int price = cursor.getInt(priceColumnIndex);
-            String image = cursor.getString(imageColumnIndex);
-            if (image != null) {
-                Uri imgUri = Uri.parse(image);
-                itemImage.setImageURI(imgUri);
-            }
+    public void setItem(Item item)
+    {
+        if (item == null)
+            return;
 
-            // Update the view on the screen with the values from the database
-            nameEditText.setText(name);
-            priceEditText.setText(price);
-            itemQuantityText.setText(quantity);
-
+        String itemUri = item.getImageUri();
+        if (itemUri != null)
+        {
+            Uri imgUri = Uri.parse(item.getImageUri());
+            itemImage.setImageURI(imgUri);
         }
 
+        // Update the view on the screen with the values from the database
+        nameEditText.setText(item.getName());
+        priceEditText.setText(item.getPrice());
+        itemQuantityText.setText(item.getQuantity());
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
         // If the loader is invalidated, clear out all the data from the input fields
-        nameEditText.setText("");
-        priceEditText.setText("");
-        itemQuantityText.setText("");
-
-
+       setItem(new Item());
     }
 
     @Override
@@ -613,7 +542,5 @@ public class EditorActivity extends AppCompatActivity implements
         // Close the activity
         finish();
     }
-
-
 
 }

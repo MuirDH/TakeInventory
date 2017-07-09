@@ -1,5 +1,6 @@
 package com.example.android.takeinventory;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -20,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.android.takeinventory.data.Database;
+
 import static com.example.android.takeinventory.data.InventoryContract.ItemEntry;
 
 // displays a list of items that were entered and stored in the app
@@ -30,6 +33,28 @@ public class CatalogActivity extends AppCompatActivity implements
 
     // Adapter for the ListView
     ItemCursorAdapter cursorAdapter;
+    Database database = new Database();
+
+    public void onSalePress(View view){
+        ContentResolver resolver = getContentResolver();
+        int currentItemId = view.getId();
+
+        Uri uri = Uri.parse("content://com.example.android.takeinventory/items/" + String.valueOf(currentItemId));
+
+        Cursor cursor = resolver.query(uri, null, null, null, null);
+        cursor.moveToFirst();
+
+        int quantityColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_QUANTITY);
+        String value = cursor.getString(quantityColumnIndex);
+        cursor.close();
+        int quantity = Integer.parseInt(value);
+
+        ContentValues values = new ContentValues();
+        values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity - 1);
+
+        resolver.update(uri, values, null, null);
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +73,7 @@ public class CatalogActivity extends AppCompatActivity implements
 
         // Find the ListView which will be populated with the item data
         ListView itemListView = (ListView) findViewById(R.id.list);
+
 
         // find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
@@ -98,7 +124,7 @@ public class CatalogActivity extends AppCompatActivity implements
          * attributes are the values
          */
         ContentValues values = new ContentValues();
-        values.put(ItemEntry.COLUMN_ITEM_NAME, "Example Item");
+        values.put(ItemEntry.COLUMN_ITEM_NAME, "Towels");
         values.put(ItemEntry.COLUMN_ITEM_QUANTITY, 42);
         values.put(ItemEntry.COLUMN_ITEM_PRICE, 7);
 
@@ -179,7 +205,11 @@ public class CatalogActivity extends AppCompatActivity implements
                 null,                  // No selection clause
                 null,                  // No selection arguments
                 null);                 // Default sort order
+
+
     }
+
+
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
