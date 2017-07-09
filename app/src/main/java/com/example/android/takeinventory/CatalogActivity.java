@@ -21,8 +21,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.android.takeinventory.data.Database;
-
 import static com.example.android.takeinventory.data.InventoryContract.ItemEntry;
 
 // displays a list of items that were entered and stored in the app
@@ -33,7 +31,6 @@ public class CatalogActivity extends AppCompatActivity implements
 
     // Adapter for the ListView
     ItemCursorAdapter cursorAdapter;
-    Database database = new Database();
 
     public void onSalePress(View view){
         ContentResolver resolver = getContentResolver();
@@ -195,8 +192,8 @@ public class CatalogActivity extends AppCompatActivity implements
         String[] projection = {
                 ItemEntry._ID,
                 ItemEntry.COLUMN_ITEM_NAME,
-                ItemEntry.COLUMN_ITEM_QUANTITY,
-                ItemEntry.COLUMN_ITEM_PRICE};
+                ItemEntry.COLUMN_ITEM_PRICE,
+                ItemEntry.COLUMN_ITEM_QUANTITY};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,  // Parent activity context

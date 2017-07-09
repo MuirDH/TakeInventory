@@ -66,6 +66,7 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/common_padding"
         android:src="@drawable/create_new"
-        app:backgroundTint="@color/colorIcon" />
+        app:backgroundTint="@color/colorIcon"
+        android:focusable="false"/>
 
 </RelativeLayout>

@@ -43,7 +43,7 @@ Quantity add/remove buttons, an Order button, a Delete button, and an edit butto
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- change quantity fields -->
+            <!-- change edit_item_quantity fields -->
             <TextView
                 android:id="@+id/change_quantity"
                 style="@style/DetailText"

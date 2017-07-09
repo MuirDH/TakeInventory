@@ -150,14 +150,19 @@ public class EditorActivity extends AppCompatActivity implements
     // Method which handles when the user clicks the "Order" button
     public void composeEmail (View view) {
             String subject = "Order Summary from Take Inventory app";
-            String message = "Required items to restock:\n" + nameEditText.getText().toString().trim();
-            message = message + "Quantity: " + itemQuantityText;
-            Intent sendOrder = new Intent(Intent.ACTION_SENDTO);
-            sendOrder.setData(Uri.parse("mailto:"));
+
+            String message = "Required items to restock:\n"
+                    + nameEditText.getText().toString().trim() +"\n";
+
+            message = message + "Quantity: " + itemQuantityText.getText().toString().trim();
+
+            Intent sendOrder = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "example@gmail.com", null));
+
             sendOrder.putExtra(Intent.EXTRA_SUBJECT, subject);
             sendOrder.putExtra(Intent.EXTRA_TEXT, message);
             if (sendOrder.resolveActivity(getPackageManager()) != null)
-                startActivity(sendOrder);
+                startActivity(Intent.createChooser(sendOrder, "Send email..."));
         }
 
     public void increaseQuantity (View view) {

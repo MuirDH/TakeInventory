@@ -41,7 +41,7 @@ public class Database {
             int price = cursor.getInt(priceColumnIndex);
             String image = cursor.getString(imageColumnIndex);
 
-            return new Item(name, String.valueOf(quantity), String.valueOf(price), image);
+            return new Item(name, String.valueOf(price), String.valueOf(quantity), image);
         }
         return null;
     }
