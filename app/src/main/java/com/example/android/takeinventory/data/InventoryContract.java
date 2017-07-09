@@ -45,14 +45,15 @@ public class InventoryContract {
      * Each entry in the table represents a single item.
      */
     public static final class ItemEntry implements BaseColumns {
+
         // the content URI to access the inventory data in the provider
         public static final Uri CONTENT_URI =
                 Uri.withAppendedPath(BASE_CONTENT_URI, PATH_INVENTORY);
 
         // The MIME type of the {@link #CONTENT_URI} for a list of items.
         static final String CONTENT_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-                        + "/" + CONTENT_AUTHORITY
-                        + "/" + PATH_INVENTORY;
+                + "/" + CONTENT_AUTHORITY
+                + "/" + PATH_INVENTORY;
 
         // The MIME type of the {@link #CONTENT_URI} for a single item.
         static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
@@ -64,40 +65,40 @@ public class InventoryContract {
 
         /**
          * Unique ID number for the pet (only for use in the database table).
-         *
+         * <p>
          * Type: INTEGER
          */
         public final static String _ID = BaseColumns._ID;
 
         /**
          * Name of the item
-         *
+         * <p>
          * Type: TEXT
          */
         public final static String COLUMN_ITEM_NAME = "name";
 
         /**
          * Number of items in stock
-         *
+         * <p>
          * Type: INTEGER
          */
         public final static String COLUMN_ITEM_QUANTITY = "quantity";
 
         /**
          * Price of the item
-         *
+         * <p>
          * Type: INTEGER
          */
         public final static String COLUMN_ITEM_PRICE = "price";
 
         /**
          * Image of the item
-         *
+         * <p>
          * TYPE: BYTE
          */
-        public final static String COLUMN_ITEM_IMAGE = "image";
+        final static String COLUMN_ITEM_IMAGE = "image";
 
-        public static boolean quantityNotZero(int quantity) {
+        static boolean quantityNotZero(int quantity) {
             return quantity >= 0;
         }
     }

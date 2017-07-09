@@ -11,8 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import static com.example.android.takeinventory.data.InventoryContract.*;
 import static com.example.android.takeinventory.data.InventoryContract.CONTENT_AUTHORITY;
+import static com.example.android.takeinventory.data.InventoryContract.ItemEntry;
 import static com.example.android.takeinventory.data.InventoryContract.PATH_INVENTORY;
 
 /**
@@ -46,17 +46,17 @@ public class InventoryProvider extends ContentProvider {
          *
          * The content URI of the form "content://com.example.android.takeinventory/inventory will
          * map to the integer code {@link #ITEMS}. This URI is used to provide access to
-         * MUULTIPLE rows of the inventory table
+         * MULTIPLE rows of the inventory table
          */
         uriMatcher.addURI(CONTENT_AUTHORITY, PATH_INVENTORY, ITEMS);
 
         /*
-         * The content URI of the form "content://com.example.android.takeinventory/inventory/#"
+         * The content URI of the form "content://com.example.android.takeinventory/items/#"
          * will map to the integer code {@link #ITEM_ID}. This URI is used to provide access to ONE
          * single row of the inventory table.
          *
          * In this case, the "#" wildcard is used where "#" can be substituted for an integer. For
-         * example, "content://com.example.android.takeinventory/inventory/3" matches, but
+         * example, "content://com.example.android.takeinventory/items/3" matches, but
          * "content://com.example.android.takeinventory/inventory" (without a number at the end)
          * doesn't match.
          */
@@ -68,6 +68,7 @@ public class InventoryProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
+
         dbHelper = new InventoryDbHelper(getContext());
         return true;
     }
@@ -98,7 +99,7 @@ public class InventoryProvider extends ContentProvider {
             case ITEM_ID:
                 /*
                  * For the ITEM_ID code, extract out the ID from the URI. For an example URI such as
-                 * "content://com.example.android.takeinventory/inventory/3", the selection will be
+                 * "content://com.example.android.takeinventory/items/3", the selection will be
                  * "_id=?" and the selection argument will be a String array containing the actual
                  * ID of 3 in this case.
                  *
@@ -108,7 +109,7 @@ public class InventoryProvider extends ContentProvider {
                  */
                 selection = ItemEntry._ID + "=?";
 
-                selectionArgs = new String[] {
+                selectionArgs = new String[]{
                         String.valueOf(ContentUris.parseId(uri))
                 };
 
@@ -136,7 +137,9 @@ public class InventoryProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
+
         final int match = uriMatcher.match(uri);
+
         switch (match) {
             case ITEMS:
                 return insertItem(uri, contentValues);
@@ -150,21 +153,24 @@ public class InventoryProvider extends ContentProvider {
      * for that specific row in the database.
      */
     private Uri insertItem(Uri uri, ContentValues values) {
+
         // check that the name is not null
         String name = values.getAsString(ItemEntry.COLUMN_ITEM_NAME);
+
         if (name == null)
             throw new IllegalArgumentException("Item requires a name");
 
         // Check that the quantity is not less than 0
         Integer quantity = values.getAsInteger(ItemEntry.COLUMN_ITEM_QUANTITY);
-        if ( quantity != null && !ItemEntry.quantityNotZero(quantity))
+
+        if (quantity != null && !ItemEntry.quantityNotZero(quantity))
             throw new IllegalArgumentException("Cannot have a negative item quantity");
 
         // Check that the price is valid
         Integer price = values.getAsInteger(ItemEntry.COLUMN_ITEM_PRICE);
-        if (price != null && !ItemEntry.quantityNotZero(price)) {
-            throw new IllegalArgumentException( "Item can not have a negative price");
-        }
+
+        if (price != null && !ItemEntry.quantityNotZero(price))
+            throw new IllegalArgumentException("Item can not have a negative price");
 
         // Get writable database
         SQLiteDatabase database = dbHelper.getWritableDatabase();
@@ -187,7 +193,7 @@ public class InventoryProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, ContentValues contentValues,
-                       String selection, String[] selectionArgs) {
+                      String selection, String[] selectionArgs) {
         final int match = uriMatcher.match(uri);
         switch (match) {
             case ITEMS:
@@ -199,7 +205,7 @@ public class InventoryProvider extends ContentProvider {
                  * containing the actual ID.
                  */
                 selection = ItemEntry._ID + "=?";
-                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateItem(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
@@ -293,7 +299,7 @@ public class InventoryProvider extends ContentProvider {
          * If 1 or more rows were deleted, then notify all listeners that the data at the given URI
          * was changed
          */
-        if (rowsDeleted !=0)
+        if (rowsDeleted != 0)
             getContext().getContentResolver().notifyChange(uri, null);
 
         // return the number of rows deleted

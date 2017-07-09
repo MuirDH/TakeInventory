@@ -32,21 +32,31 @@ public class CatalogActivity extends AppCompatActivity implements
     // Adapter for the ListView
     ItemCursorAdapter cursorAdapter;
 
-    public void onSalePress(View view){
+    public void onSalePress(View view) {
         ContentResolver resolver = getContentResolver();
         int currentItemId = view.getId();
 
-        Uri uri = Uri.parse("content://com.example.android.takeinventory/items/" + String.valueOf(currentItemId));
+        Uri uri = Uri.parse("content://com.example.android.takeinventory/items/"
+                + String.valueOf(currentItemId));
 
         Cursor cursor = resolver.query(uri, null, null, null, null);
-        cursor.moveToFirst();
+        if (cursor != null) cursor.moveToFirst();
 
-        int quantityColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_QUANTITY);
-        String value = cursor.getString(quantityColumnIndex);
-        cursor.close();
+        int quantityColumnIndex = 0;
+
+        if (cursor != null)
+            quantityColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_QUANTITY);
+
+        String value = null;
+
+        if (cursor != null) value = cursor.getString(quantityColumnIndex);
+
+        if (cursor != null) cursor.close();
+
         int quantity = Integer.parseInt(value);
 
         ContentValues values = new ContentValues();
+
         values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity - 1);
 
         resolver.update(uri, values, null, null);
@@ -55,6 +65,7 @@ public class CatalogActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
 
@@ -139,6 +150,7 @@ public class CatalogActivity extends AppCompatActivity implements
      * Helper method to delete the full inventory in the database
      */
     private void deleteInventory() {
+
         int rowsDeleted = getContentResolver().delete(ItemEntry.CONTENT_URI, null, null);
 
         Log.v("CatalogActivity", rowsDeleted + " rows deleted from inventory database");
@@ -161,6 +173,7 @@ public class CatalogActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu options from the res/menu/menu_catalog.xml file.
         // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.menu_catalog, menu);
@@ -207,15 +220,16 @@ public class CatalogActivity extends AppCompatActivity implements
     }
 
 
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
         // Update {@link ItemCursorAdapter} with this new cursor containing updated item data
         cursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
         // Callback called when the data needs to be deleted.
         cursorAdapter.swapCursor(null);
     }

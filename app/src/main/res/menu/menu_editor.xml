@@ -6,9 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".EditorActivity">
 
-    <item android:id="@+id/action_save"
-        android:title="@string/save"
+    <item
+        android:id="@+id/action_save"
         android:icon="@drawable/ic_save"
+        android:title="@string/save"
         app:showAsAction="ifRoom" />
 
     <item

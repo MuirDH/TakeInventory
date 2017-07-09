@@ -16,26 +16,46 @@ public class Item {
     private String quantity = "";
     private String imageUri = "";
 
-    public String getName() {return this.name;}
-    public void setName(String name) {this.name = name;}
+    public String getName() {
+        return this.name;
+    }
 
-    public String getPrice() {return this.price;}
-    public void setPrice(String price) {this.price = price;}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getQuantity() {return this.quantity;}
-    public void setQuantity(String quantity) {this.quantity = quantity;}
+    public String getPrice() {
+        return this.price;
+    }
 
-    public String getImageUri() {return  this.imageUri;}
-    public void setImageUri(String imageUri){this.imageUri = imageUri;}
+    private void setPrice(String price) {
+        this.price = price;
+    }
 
-    public Item (String name, String price, String quantity, String imageUri){
+    public String getQuantity() {
+        return this.quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getImageUri() {
+        return this.imageUri;
+    }
+
+    private void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public Item(String name, String price, String quantity, String imageUri) {
         setName(name);
         setPrice(price);
         setQuantity(quantity);
         setImageUri(imageUri);
     }
 
-    public Item(){
+    public Item() {
 
     }
 

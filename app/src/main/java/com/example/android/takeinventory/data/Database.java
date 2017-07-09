@@ -15,6 +15,8 @@ import static com.example.android.takeinventory.data.InventoryContract.ItemEntry
 
 /**
  * TakeInventory Created by Muir on 09/07/2017.
+ * Database class handles the Cursor and ContentValues. Code was extracted from EditorActivity to
+ * make that class easier to read.
  */
 
 public class Database {
@@ -37,8 +39,10 @@ public class Database {
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
+
             int quantity = cursor.getInt(quantityColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
+
             String image = cursor.getString(imageColumnIndex);
 
             return new Item(name, String.valueOf(price), String.valueOf(quantity), image);
@@ -51,7 +55,7 @@ public class Database {
          * since the editor show all item attributes, define a projection that contains all columns
          * from the inventory table
          */
-        String [] projection = {
+        String[] projection = {
                 ItemEntry._ID,
                 ItemEntry.COLUMN_ITEM_NAME,
                 ItemEntry.COLUMN_ITEM_PRICE,
@@ -85,12 +89,12 @@ public class Database {
                 && TextUtils.isEmpty(item.getImageUri());
     }
 
-    public int updateItem(ContentResolver contentResolver, Item item, Uri itemUri){
+    public int updateItem(ContentResolver contentResolver, Item item, Uri itemUri) {
         return contentResolver.update(itemUri, getValues(item), null, null);
 
     }
 
-    private ContentValues getValues (Item item){
+    private ContentValues getValues(Item item) {
         /*
          * Read from fields. Use trim to eliminate leading or trailing white space
          */

@@ -40,4 +40,8 @@
     <string name="delete_dialog_msg">Delete this item?</string>
     <string name="cancel">Cancel</string>
     <string name="editor_delete_item_successful">Item deleted.</string>
+    <string name="order_summary_subject">Order Summary from Take Inventory app</string>
+    <string name="items_to_restock_email">Required items to restock:</string>
+    <string name="quantity_email">Quantity:</string>
+    <string name="sale_button_pressed">Sale button pressed</string>
 </resources>

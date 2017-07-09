@@ -11,7 +11,7 @@ import static com.example.android.takeinventory.data.InventoryContract.*;
  * Database helper for the inventory app. Manages database creation and version management.
  */
 
-public class InventoryDbHelper extends SQLiteOpenHelper{
+class InventoryDbHelper extends SQLiteOpenHelper {
 
     public static final String LOG_TAG = InventoryDbHelper.class.getSimpleName();
 
@@ -24,15 +24,17 @@ public class InventoryDbHelper extends SQLiteOpenHelper{
 
     /**
      * constructs a new instance of {@link InventoryDbHelper}
+     *
      * @param context of the app
      */
-    public InventoryDbHelper(Context context){
+    InventoryDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     // call when the database is created for the first time
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         // Create a String that contains the SQL statement to create the inventory table
         SQL_CREATE_INVENTORY_TABLE = "CREATE TABLE " + ItemEntry.TABLE_NAME + " ("
                 + ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "

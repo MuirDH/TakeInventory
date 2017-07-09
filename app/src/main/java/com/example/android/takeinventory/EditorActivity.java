@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
@@ -67,7 +66,6 @@ public class EditorActivity extends AppCompatActivity implements
     private Database database = new Database();
 
 
-
     /**
      * Boolean flag that keeps track of whether the item has been edited (true) or not (false)
      */
@@ -88,6 +86,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
@@ -95,12 +94,14 @@ public class EditorActivity extends AppCompatActivity implements
         //creating a new item or editing an existing one.
         isNewItem();
 
-        // Find all relevant views that we will need to readfrom
+        // Find all relevant views that we will need to read from
         nameEditText = (EditText) findViewById(R.id.edit_item_name);
         priceEditText = (EditText) findViewById(R.id.edit_item_price);
+
         ImageButton plusButton = (ImageButton) findViewById(R.id.add);
         ImageButton minusButton = (ImageButton) findViewById(R.id.minus);
         ImageButton addImageButton = (ImageButton) findViewById(R.id.add_photo);
+
         itemQuantityText = (TextView) findViewById(R.id.quantity);
         itemImage = (ImageView) findViewById(R.id.item_image);
 
@@ -111,6 +112,7 @@ public class EditorActivity extends AppCompatActivity implements
          */
         nameEditText.setOnTouchListener(touchListener);
         priceEditText.setOnTouchListener(touchListener);
+
         plusButton.setOnTouchListener(touchListener);
         minusButton.setOnTouchListener(touchListener);
         addImageButton.setOnTouchListener(touchListener);
@@ -118,6 +120,7 @@ public class EditorActivity extends AppCompatActivity implements
     }
 
     private void isNewItem() {
+
         Intent intent = getIntent();
         currentItemUri = intent.getData();
         uri = intent.getData();
@@ -148,104 +151,120 @@ public class EditorActivity extends AppCompatActivity implements
     }
 
     // Method which handles when the user clicks the "Order" button
-    public void composeEmail (View view) {
-            String subject = "Order Summary from Take Inventory app";
+    public void composeEmail(View view) {
 
-            String message = "Required items to restock:\n"
-                    + nameEditText.getText().toString().trim() +"\n";
+        String subject = getString(R.string.order_summary_subject);
 
-            message = message + "Quantity: " + itemQuantityText.getText().toString().trim();
+        String message = getString(R.string.items_to_restock_email)
+                + nameEditText.getText().toString().trim() + "\n";
 
-            Intent sendOrder = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                    "mailto", "example@gmail.com", null));
+        message = message + getString(R.string.quantity_email)
+                + itemQuantityText.getText().toString().trim();
 
-            sendOrder.putExtra(Intent.EXTRA_SUBJECT, subject);
-            sendOrder.putExtra(Intent.EXTRA_TEXT, message);
-            if (sendOrder.resolveActivity(getPackageManager()) != null)
-                startActivity(Intent.createChooser(sendOrder, "Send email..."));
-        }
+        Intent sendOrder = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto", "example@gmail.com", null));
 
-    public void increaseQuantity (View view) {
-            // parse the string in the database to an int, add one then convert back to a String
-            String quantity = itemQuantityText.getText().toString().trim();
-        int q = Integer.parseInt(quantity);
-        q++;
-        String finalQuantity = String.valueOf(q);
-        itemQuantityText.setText(finalQuantity);
-        }
+        sendOrder.putExtra(Intent.EXTRA_SUBJECT, subject);
+        sendOrder.putExtra(Intent.EXTRA_TEXT, message);
 
-
-    public void onSalePress(View view){
-        Toast.makeText(this, "Sale button pressed", Toast.LENGTH_SHORT).show();
+        if (sendOrder.resolveActivity(getPackageManager()) != null)
+            startActivity(Intent.createChooser(sendOrder, "Send email..."));
     }
 
-    public void decreaseQuantity (View view){
-            // parse the string in the db to an int, subtract one then convert back to a String
-            String quantity = itemQuantityText.getText().toString().trim();
+    public void increaseQuantity(View view) {
+
+        // parse the string in the database to an int, add one then convert back to a String
+        String quantity = itemQuantityText.getText().toString().trim();
+
         int q = Integer.parseInt(quantity);
+
+        q++;
+
+        String finalQuantity = String.valueOf(q);
+
+        itemQuantityText.setText(finalQuantity);
+    }
+
+
+    public void onSalePress(View view) {
+
+        Toast.makeText(this, R.string.sale_button_pressed, Toast.LENGTH_SHORT).show();
+    }
+
+    public void decreaseQuantity(View view) {
+
+        // parse the string in the db to an int, subtract one then convert back to a String
+        String quantity = itemQuantityText.getText().toString().trim();
+
+        int q = Integer.parseInt(quantity);
+
         if (q > 0) {
             q--;
             String finalQuantity = String.valueOf(q);
             itemQuantityText.setText(finalQuantity);
-        }else
+        } else
             Toast.makeText(this, getString(R.string.cannot_have_negative_quanity),
                     Toast.LENGTH_SHORT).show();
-        }
+    }
 
-    public void addNewImage (View view){
-            Intent intent;
-            if (Build.VERSION.SDK_INT < 19) intent = new Intent(Intent.ACTION_GET_CONTENT);
-            else {
-                intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-            }
-            intent.setType("image/*");
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), IMAGE_REQUEST);
-        }
+    public void addNewImage(View view) {
+
+        Intent intent;
+        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), IMAGE_REQUEST);
+    }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCodes, Intent resultData) {
-        if (resultCodes == Activity.RESULT_OK) {
-            if (resultData != null) {
-                uri = resultData.getData();
-                String currentImageUri = resultData.getData().toString();
-                bitmap = getBitmapFromCurrentItemURI(uri);
-                itemImage.setImageBitmap(bitmap);
-                uriString = getShareableImageUri().toString();
-                galleryImage = true;
 
-            }
+        if (resultCodes == Activity.RESULT_OK && resultData != null) {
+            uri = resultData.getData();
+            bitmap = getBitmapFromCurrentItemURI(uri);
+            itemImage.setImageBitmap(bitmap);
+            uriString = getShareableImageUri().toString();
+            galleryImage = true;
+
         }
     }
 
     private Bitmap getBitmapFromCurrentItemURI(Uri uri) {
+
         ParcelFileDescriptor parcelFileDescriptor = null;
+
         try {
+
             parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
             FileDescriptor fileDescriptor = null;
-            if (parcelFileDescriptor != null) {
+
+            if (parcelFileDescriptor != null)
                 fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-            }
+
             Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-            if (parcelFileDescriptor != null) {
-                parcelFileDescriptor.close();
-            }
+
+            if (parcelFileDescriptor != null) parcelFileDescriptor.close();
+
             return image;
         } catch (Exception e) {
+
             return null;
         } finally {
+
             try {
-                if (parcelFileDescriptor != null) {
-                    parcelFileDescriptor.close();
-                }
+
+                if (parcelFileDescriptor != null) parcelFileDescriptor.close();
+
             } catch (IOException e) {
+
                 e.printStackTrace();
             }
         }
     }
 
     public Uri getShareableImageUri() {
+
         Uri imagesUri;
 
         if (galleryImage) {
@@ -255,55 +274,60 @@ public class EditorActivity extends AppCompatActivity implements
 
             imagesUri = FileProvider.getUriForFile(this, FILE_PROVIDER_AUTHORITY, imagesFile);
         } else {
+
             imagesUri = uri;
         }
         return imagesUri;
     }
 
     public String PathFinder() {
+
         Cursor returnCursor =
                 getContentResolver().query
                         (uri, new String[]{OpenableColumns.DISPLAY_NAME}, null, null, null);
 
-        if (returnCursor != null) {
-            returnCursor.moveToFirst();
-        }
+        if (returnCursor != null) returnCursor.moveToFirst();
+
         String fileNames = null;
-        if (returnCursor != null) {
-            fileNames = returnCursor.getString
-                    (returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-        }
-        if (returnCursor != null) {
-            returnCursor.close();
-        }
+
+        if (returnCursor != null) fileNames = returnCursor.getString
+                (returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+
+        if (returnCursor != null) returnCursor.close();
+
         return fileNames;
     }
 
     public boolean savingInFile(File dir, String fileName, Bitmap bm, Bitmap.CompressFormat format,
                                 int quality) {
+
         File imagesFile = new File(dir, fileName);
 
         FileOutputStream fileOutputStream = null;
+
         try {
+
             fileOutputStream = new FileOutputStream(imagesFile);
             bm.compress(format, quality, fileOutputStream);
             fileOutputStream.close();
 
             return true;
+
         } catch (IOException e) {
-            if (fileOutputStream != null) {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+
+            if (fileOutputStream != null) try {
+
+                fileOutputStream.close();
+
+            } catch (IOException e1) {
+
+                e1.printStackTrace();
             }
         }
         return false;
     }
 
     private void saveItem() {
-
 
         /*
          * Read from fields. Use trim to eliminate leading or trailing white space
@@ -321,15 +345,14 @@ public class EditorActivity extends AppCompatActivity implements
             Uri uri = database.addItem(getContentResolver(), newItem);
 
             // Show a toast message depending on whether or not the insertion was successful
-            if (uri == null) {
-                // If the new content URI is null, then there was an error with insertion
-                Toast.makeText(this, getString(R.string.editor_insert_failed),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                // Otherwise, the insertion wsa successful and we can display a toast to inform user
-                Toast.makeText(this, getString(R.string.editor_insert_successful),
-                        Toast.LENGTH_SHORT).show();
-            }
+            // If the new content URI is null, then there was an error with insertion
+            // Otherwise, the insertion wsa successful and we can display a toast to inform user
+            if (uri == null) Toast.makeText(this, getString(R.string.editor_insert_failed),
+                    Toast.LENGTH_SHORT).show();
+
+            else Toast.makeText(this, getString(R.string.editor_insert_successful),
+                    Toast.LENGTH_SHORT).show();
+
         } else {
             /*
              * Otherwise this is an EXISTING item, so update the item with content URI:
@@ -340,20 +363,24 @@ public class EditorActivity extends AppCompatActivity implements
             int rowsAffected = database.updateItem(getContentResolver(), newItem, currentItemUri);
 
             // Show a toast message depending on whether or not the update was successful
-            if (rowsAffected == 0) {
-                // If no rows were affected, there was an error with the update
-                Toast.makeText(this, getString(R.string.editor_insert_failed),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                // Otherwise, the update was successful and we can display a toast to inform user.
-                Toast.makeText(this, getString(R.string.editor_insert_successful),
-                        Toast.LENGTH_SHORT).show();
+            switch (rowsAffected) {
+                case 0:
+                    // If no rows were affected, there was an error with the update
+                    Toast.makeText(this, getString(R.string.editor_insert_failed),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    // Otherwise, the update was successful and we can display a toast to inform user.
+                    Toast.makeText(this, getString(R.string.editor_insert_successful),
+                            Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu options from the res/menu/menu_editor.xml file.
         // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.menu_editor, menu);
@@ -362,6 +389,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+
         super.onPrepareOptionsMenu(menu);
 
         // if this is a new item, hide the "Delete" menu item
@@ -379,7 +407,7 @@ public class EditorActivity extends AppCompatActivity implements
          * from the inventory table
          */
 
-        return database.getLoader(id,args,this,currentItemUri);
+        return database.getLoader(id, args, this, currentItemUri);
     }
 
     @Override
@@ -393,14 +421,14 @@ public class EditorActivity extends AppCompatActivity implements
         setItem(item);
     }
 
-    public void setItem(Item item)
-    {
+    public void setItem(Item item) {
+
         if (item == null)
             return;
 
         String itemUri = item.getImageUri();
-        if (itemUri != null)
-        {
+        if (itemUri != null) {
+
             Uri imgUri = Uri.parse(item.getImageUri());
             itemImage.setImageURI(imgUri);
         }
@@ -409,19 +437,22 @@ public class EditorActivity extends AppCompatActivity implements
         nameEditText.setText(item.getName());
         priceEditText.setText(item.getPrice());
         itemQuantityText.setText(item.getQuantity());
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
         // If the loader is invalidated, clear out all the data from the input fields
-       setItem(new Item());
+        setItem(new Item());
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
+
             // respond to a click on the "Save" menu option
             case R.id.action_save:
                 // save item to database
@@ -429,11 +460,13 @@ public class EditorActivity extends AppCompatActivity implements
                 // exit activity
                 finish();
                 return true;
+
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
                 // Pop up confirmation dialog for deletion
                 showDeleteConfirmationDialog();
                 return true;
+
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 /*
@@ -466,6 +499,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
+
         /*
          * Create an AlertDialog.Builder and set the message and click listeners for the positive
          * and negative buttons on the dialog
@@ -473,15 +507,16 @@ public class EditorActivity extends AppCompatActivity implements
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+
             public void onClick(DialogInterface dialog, int id) {
+
                 /*
                  * User clicked the "Keep editing" button, so dismiss the dialog and continue
                  * editing the item.
                  */
-                if (dialog != null){
-                    dialog.dismiss();
-                }
+                if (dialog != null) dialog.dismiss();
             }
         });
 
@@ -492,15 +527,19 @@ public class EditorActivity extends AppCompatActivity implements
 
     // Prompt the user to confirm that they want to delete this item
     private void showDeleteConfirmationDialog() {
+
         /*
          * Create an AlertDialog.Builder and set the message, and click listeners for the positive
          * and negative button on the dialog
          */
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_dialog_msg);
+
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialog, int id) {
+
                 // User clicked the "Delete" button, so delete the item
                 deleteItem();
             }
@@ -534,15 +573,13 @@ public class EditorActivity extends AppCompatActivity implements
             int rowsDeleted = getContentResolver().delete(currentItemUri, null, null);
 
             // Show a toast message depending on whether or not the delete was successful.
-            if (rowsDeleted == 0) {
-                // if no rows were deleted, then there was an error with the delete
+            // if no rows were deleted, then there was an error with the delete
+            // Otherwise, the delete was successful and we can display a toast to say so.
+            if (rowsDeleted == 0)
                 Toast.makeText(this, getString(R.string.editor_delete_item_failed),
                         Toast.LENGTH_SHORT).show();
-            }else {
-                // Otherwise, the delete was successful and we can display a toast to say so.
-                Toast.makeText(this, getString(R.string.editor_delete_item_successful),
-                        Toast.LENGTH_SHORT).show();
-            }
+            else Toast.makeText(this, getString(R.string.editor_delete_item_successful),
+                    Toast.LENGTH_SHORT).show();
         }
         // Close the activity
         finish();
