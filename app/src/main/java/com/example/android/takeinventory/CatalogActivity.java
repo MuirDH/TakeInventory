@@ -97,7 +97,7 @@ public class CatalogActivity extends AppCompatActivity implements
                   * form the content URI that represents the specific item that was clicked on, by
                   * appending the "id" (passed as input to this method) onto the
                   * {@link ItemEntry#CONTENT_URI}. For example, the URI would be
-                  * "content://com.example.android.takeinventory/inventory/2" if the item with ID 2
+                  * "content://com.example.android.takeinventory/items/2" if the item with ID 2
                   * was clicked on.
                   */
                 Uri currentItemUri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, id);

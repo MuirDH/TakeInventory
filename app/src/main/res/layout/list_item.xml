@@ -37,7 +37,8 @@
         android:backgroundTint="@color/colorIcon"
         android:contentDescription="@string/dollar_sign_in_a_circle"
         android:onClick="onSalePress"
-        android:src="@drawable/item_sold" />
+        android:src="@drawable/item_sold"
+        android:focusable="false"/>
 
 
 </LinearLayout>
