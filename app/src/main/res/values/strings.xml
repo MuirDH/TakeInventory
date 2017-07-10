@@ -46,4 +46,6 @@
     <string name="sale_button_pressed">Sale button pressed</string>
     <string name="product_name_required">Product name required. Item not saved.</string>
     <string name="price_amount_required">Price amount required. Item not saved.</string>
+    <string name="item_needs_quantity">Please input a quantity for the item. Item not saved.</string>
+    <string name="item_image_required">Item image required. Item not saved.</string>
 </resources>

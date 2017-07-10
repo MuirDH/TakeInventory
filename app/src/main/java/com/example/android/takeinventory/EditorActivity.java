@@ -333,20 +333,32 @@ public class EditorActivity extends AppCompatActivity implements
     private void saveItem() {
 
         /*
-         * Read from fields. Use trim to eliminate leading or trailing white space
+         * Read from fields. Use trim to eliminate leading or trailing white space. Validate strings
+         * to make sure that user included information for all fields.
          */
         String nameString = nameEditText.getText().toString().trim();
-
         if (nameString.matches("")){
             Toast.makeText(this, R.string.product_name_required, Toast.LENGTH_SHORT).show();
             return;
         }
+
         String priceString = priceEditText.getText().toString().trim();
         if (priceString.matches("")){
             Toast.makeText(this, R.string.price_amount_required, Toast.LENGTH_SHORT).show();
+            return;
         }
+
         String quantityString = itemQuantityText.getText().toString().trim();
+        if (quantityString.matches("")){
+            Toast.makeText(this, R.string.item_needs_quantity, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String imageString = uriString;
+        if (imageString.matches("")){
+            Toast.makeText(this, R.string.item_image_required, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Item newItem = new Item(nameString, priceString, quantityString, imageString);
 
