@@ -355,7 +355,7 @@ public class EditorActivity extends AppCompatActivity implements
         }
 
         String imageString = uriString;
-        if (imageString.matches("")){
+        if (imageString == null){
             Toast.makeText(this, R.string.item_image_required, Toast.LENGTH_SHORT).show();
             return;
         }
