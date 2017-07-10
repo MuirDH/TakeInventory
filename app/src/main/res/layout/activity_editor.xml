@@ -36,6 +36,7 @@ Quantity add/remove buttons, an Order button, a Delete button, and an edit butto
             android:id="@+id/edit_item_price"
             style="@style/EditorFieldStyle"
             android:hint="@string/item_price"
+            android:digits="0123456789"
             android:inputType="number"/>
 
         <RelativeLayout

@@ -44,4 +44,6 @@
     <string name="items_to_restock_email">Required items to restock:</string>
     <string name="quantity_email">Quantity:</string>
     <string name="sale_button_pressed">Sale button pressed</string>
+    <string name="product_name_required">Product name required. Item not saved.</string>
+    <string name="price_amount_required">Price amount required. Item not saved.</string>
 </resources>

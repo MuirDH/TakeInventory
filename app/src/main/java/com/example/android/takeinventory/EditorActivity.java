@@ -161,6 +161,9 @@ public class EditorActivity extends AppCompatActivity implements
         message = message + getString(R.string.quantity_email)
                 + itemQuantityText.getText().toString().trim();
 
+        // email is hardcoded for now just to prove that it works. In a real world app, I would
+        // create a prompt for the user to input a supplier email for each new item, save that
+        // email to the database, and access it here.
         Intent sendOrder = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                 "mailto", "example@gmail.com", null));
 
@@ -333,7 +336,15 @@ public class EditorActivity extends AppCompatActivity implements
          * Read from fields. Use trim to eliminate leading or trailing white space
          */
         String nameString = nameEditText.getText().toString().trim();
+
+        if (nameString.matches("")){
+            Toast.makeText(this, R.string.product_name_required, Toast.LENGTH_SHORT).show();
+            return;
+        }
         String priceString = priceEditText.getText().toString().trim();
+        if (priceString.matches("")){
+            Toast.makeText(this, R.string.price_amount_required, Toast.LENGTH_SHORT).show();
+        }
         String quantityString = itemQuantityText.getText().toString().trim();
         String imageString = uriString;
 
