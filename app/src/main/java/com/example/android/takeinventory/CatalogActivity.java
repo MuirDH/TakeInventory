@@ -30,8 +30,9 @@ public class CatalogActivity extends AppCompatActivity implements
     private static final int ITEM_LOADER = 0;
 
     // Adapter for the ListView
-    ItemCursorAdapter cursorAdapter;
+    private ItemCursorAdapter cursorAdapter;
 
+    // when the user clicks the Sale button...
     public void onSalePress(View view) {
         ContentResolver resolver = getContentResolver();
         int currentItemId = view.getId();
@@ -57,11 +58,26 @@ public class CatalogActivity extends AppCompatActivity implements
 
         ContentValues values = new ContentValues();
 
+        // subtract one from the quantity and display in the TextView
         values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity - 1);
+
+        // It doesn't make sense to have a negative quantity, so...
+        if (quantity <= 0) {
+            // inform the user
+            Toast.makeText(this, getString(R.string.cannot_have_negative_quanity),
+                    Toast.LENGTH_SHORT).show();
+
+            // set the quantity to 0 and display
+            values.put(ItemEntry.COLUMN_ITEM_QUANTITY, 0);
+
+        }
+
+
 
         resolver.update(uri, values, null, null);
 
     }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
  * API Contract for the Inventory App
  */
 
-public class InventoryContract {
+public final class InventoryContract {
     /*
      * To prevent someone from accidentally instantiating the contract class, give it an empty
      * constructor.

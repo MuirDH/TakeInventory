@@ -230,16 +230,6 @@ public class InventoryProvider extends ContentProvider {
         }
 
         /*
-         * If the {@link ItemEntry#COLUMN_ITEM_QUANTITY} key is present, check that the quantity
-         * value is not negative
-         */
-        if (values.containsKey(ItemEntry.COLUMN_ITEM_QUANTITY)) {
-            Integer quantity = values.getAsInteger(ItemEntry.COLUMN_ITEM_QUANTITY);
-            if (quantity != null && !ItemEntry.quantityNotZero(quantity))
-                throw new IllegalArgumentException("Negative quantities are not allowed");
-        }
-
-        /*
          * If the {@link ItemEntry#COLUMN_ITEM_PRICE} key is present, check that the price value is
          * not negative
          */
